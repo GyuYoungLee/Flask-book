@@ -78,6 +78,10 @@ def unfollow():
 @app.route('/timeline/<int:user_id>', methods=['GET'])
 def timeline(user_id):
     user = app.users.get(user_id)
+
+    if user_id not in app.users:
+        return 'no user', 400
+
     target_list = user.get('follow_list', []) + [user_id]
     timeline = [tweet for tweet in app.tweets if tweet.get('user_id') in target_list]
 
@@ -85,3 +89,11 @@ def timeline(user_id):
         'user_id': user_id,
         'timeline': timeline
     })
+
+
+# http -v POST 127.0.0.1:5000/sign-up name=gy
+# http -v POST 127.0.0.1:5000/sign-up name=jang
+# http -v POST 127.0.0.1:5000/tweet id:=1 tweet="111"
+# http -v POST 127.0.0.1:5000/tweet id:=2 tweet="222"
+# http -v POST 127.0.0.1:5000/follow id:=1 follow:=2
+# http -v GET 127.0.0.1:5000/timeline/1
