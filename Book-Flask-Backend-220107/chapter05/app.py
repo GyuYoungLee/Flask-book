@@ -13,31 +13,32 @@ def sign_up():
         'id': app.id_count,
         'name': payload.get('name'),
         'email': payload.get('email'),
-        'hashed_password': payload.get('password'),
+        'hashed_password': payload.get('passowrd'),
         'profile': payload.get('profile')
     }
 
     app.users[app.id_count] = new_user
+    new_user_id = app.id_count
     app.id_count += 1
 
-    return jsonify(new_user)
+    # return jsonify(app.users[new_user_id])
+    return jsonify(app.users)
 
 
 @app.route('/tweet', methods=['POST'])
 def tweet():
     payload = request.json
-    user_id = int(payload.get('id'))
-    tweet = payload.get('tweet')
-
-    if len(tweet) > 10:
-        return '10 over', 400
-
     new_tweet = {
-        'user_id': user_id,
-        'tweet': tweet
+        'user_id': int(payload.get('id')),
+        'tweet': payload.get('tweet')
     }
 
+    if len(new_tweet['tweet']) > 10:
+        return 'tweet should be within 10', 400
+
     app.tweets.append(new_tweet)
+
+    # return jsonify([x for x in app.tweets if x['user_id'] == new_tweet['user_id']][-1])
     return jsonify(app.tweets)
 
 
@@ -50,15 +51,15 @@ def follow():
     if user_id not in app.users:
         return 'no user', 400
 
-    user = app.users.get(user_id)
-    follow_list = user.setdefault('follow_list', [])
+    follow_list = app.users.get(user_id).setdefault('follow_list', [])
     if user_id_to_follow not in follow_list:
         follow_list.append(user_id_to_follow)
 
-    return jsonify(user)
+    # return jsonify(app.users.get(user_id))
+    return jsonify(app.users)
 
 
-@app.route('/unfollow', methods=['GET'])
+@app.route('/unfollow', methods=['POST'])
 def unfollow():
     payload = request.json
     user_id = int(payload.get('id'))
@@ -67,33 +68,31 @@ def unfollow():
     if user_id not in app.users:
         return 'no user', 400
 
-    user = app.users.get(user_id)
-    follow_list = user.setdefault('follow_list', [])
+    follow_list = app.users.get(user_id).setdefault('follow_list', [])
     if user_id_to_unfollow in follow_list:
         follow_list.remove(user_id_to_unfollow)
 
-    return jsonify(user)
+    # return jsonify(app.users.get(user_id))
+    return jsonify(app.users)
 
 
 @app.route('/timeline/<int:user_id>', methods=['GET'])
 def timeline(user_id):
-    user = app.users.get(user_id)
-
     if user_id not in app.users:
         return 'no user', 400
 
-    target_list = user.get('follow_list', []) + [user_id]
-    timeline = [tweet for tweet in app.tweets if tweet.get('user_id') in target_list]
+    user_list = [user_id] + app.users.get(user_id).get('follow_list', [])
 
     return jsonify({
         'user_id': user_id,
-        'timeline': timeline
+        'timeline': [x for x in app.tweets if x['user_id'] in user_list]
     })
 
 
 # http -v POST 127.0.0.1:5000/sign-up name=gy
-# http -v POST 127.0.0.1:5000/sign-up name=jang
-# http -v POST 127.0.0.1:5000/tweet id:=1 tweet="111"
-# http -v POST 127.0.0.1:5000/tweet id:=2 tweet="222"
+# http -v POST 127.0.0.1:5000/sign-up name=jd
+# http -v POST 127.0.0.1:5000/tweet id:=1 tweet='hi'
+# http -v POST 127.0.0.1:5000/tweet id:=2 tweet='bye'
 # http -v POST 127.0.0.1:5000/follow id:=1 follow:=2
+# http -v POST 127.0.0.1:5000/unfollow id:=1 unfollow:=2
 # http -v GET 127.0.0.1:5000/timeline/1
