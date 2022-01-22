@@ -1,0 +1,7 @@
+# http -v POST 127.0.0.1:5000/sign-up name=gy email=gy password=gy
+# http -v POST 127.0.0.1:5000/sign-up name=jang email=jd password=jd
+# http -v POST 127.0.0.1:5000/tweet id:=4 tweet=hi
+# http -v POST 127.0.0.1:5000/tweet id:=8 tweet=bye
+# http -v POST 127.0.0.1:5000/follow id:=4 follow:=8
+# http -v POST 127.0.0.1:5000/unfollow id:=4 follow:=8
+# http -v GET 127.0.0.1:5000/timeline/4

@@ -21,8 +21,7 @@ def sign_up():
     new_user_id = app.id_count
     app.id_count += 1
 
-    # return jsonify(app.users[new_user_id])
-    return jsonify(app.users)
+    return jsonify(app.users[new_user_id])
 
 
 @app.route('/tweet', methods=['POST'])
@@ -38,8 +37,7 @@ def tweet():
 
     app.tweets.append(new_tweet)
 
-    # return jsonify([x for x in app.tweets if x['user_id'] == new_tweet['user_id']][-1])
-    return jsonify(app.tweets)
+    return jsonify([x for x in app.tweets if x['user_id'] == new_tweet['user_id']][-1])
 
 
 @app.route('/follow', methods=['POST'])
@@ -55,8 +53,7 @@ def follow():
     if user_id_to_follow not in follow_list:
         follow_list.append(user_id_to_follow)
 
-    # return jsonify(app.users.get(user_id))
-    return jsonify(app.users)
+    return jsonify(app.users.get(user_id))
 
 
 @app.route('/unfollow', methods=['POST'])
@@ -72,8 +69,7 @@ def unfollow():
     if user_id_to_unfollow in follow_list:
         follow_list.remove(user_id_to_unfollow)
 
-    # return jsonify(app.users.get(user_id))
-    return jsonify(app.users)
+    return jsonify(app.users.get(user_id))
 
 
 @app.route('/timeline/<int:user_id>', methods=['GET'])
@@ -87,12 +83,3 @@ def timeline(user_id):
         'user_id': user_id,
         'timeline': [x for x in app.tweets if x['user_id'] in user_list]
     })
-
-
-# http -v POST 127.0.0.1:5000/sign-up name=gy
-# http -v POST 127.0.0.1:5000/sign-up name=jd
-# http -v POST 127.0.0.1:5000/tweet id:=1 tweet='hi'
-# http -v POST 127.0.0.1:5000/tweet id:=2 tweet='bye'
-# http -v POST 127.0.0.1:5000/follow id:=1 follow:=2
-# http -v POST 127.0.0.1:5000/unfollow id:=1 unfollow:=2
-# http -v GET 127.0.0.1:5000/timeline/1
