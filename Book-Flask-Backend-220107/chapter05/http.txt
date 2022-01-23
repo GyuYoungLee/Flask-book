@@ -3,5 +3,5 @@
 # http -v POST 127.0.0.1:5000/tweet id:=1 tweet=hi
 # http -v POST 127.0.0.1:5000/tweet id:=2 tweet=bye
 # http -v POST 127.0.0.1:5000/follow id:=1 follow:=2
-# http -v POST 127.0.0.1:5000/unfollow id:=1 follow:=2
+# http -v POST 127.0.0.1:5000/unfollow id:=1 unfollow:=2
 # http -v GET 127.0.0.1:5000/timeline/1
