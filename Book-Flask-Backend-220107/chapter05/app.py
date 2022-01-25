@@ -37,7 +37,7 @@ def tweet():
 
     app.tweets.append(new_tweet)
 
-    return jsonify([x for x in app.tweets if x['user_id'] == new_tweet['user_id']][-1])
+    return jsonify(app.tweets[-1])
 
 
 @app.route('/follow', methods=['POST'])
@@ -77,9 +77,9 @@ def timeline(user_id):
     if user_id not in app.users:
         return 'no user', 400
 
-    user_list = [user_id] + app.users.get(user_id).get('follow_list', [])
+    user_id_list = [user_id] + app.users.get(user_id).get('follow_list', [])
 
     return jsonify({
         'user_id': user_id,
-        'timeline': [x for x in app.tweets if x['user_id'] in user_list]
+        'timeline': [x for x in app.tweets if x['user_id'] in user_id_list]
     })
