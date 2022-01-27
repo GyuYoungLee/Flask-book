@@ -13,7 +13,7 @@ def sign_up():
         'id': app.id_count,
         'name': payload.get('name'),
         'email': payload.get('email'),
-        'hashed_password': payload.get('passowrd'),
+        'hashed_password': payload.get('password'),
         'profile': payload.get('profile')
     }
 

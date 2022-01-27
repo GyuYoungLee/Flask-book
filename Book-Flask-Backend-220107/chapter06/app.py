@@ -113,7 +113,7 @@ def create_app():
 
         return jsonify({
                            'id': row['user_id'],
-                           'unfollow': row['follow_user_id']
+                           'follow': row['follow_user_id']
                        } if row else None)
 
     @app.route('/timeline/<int:user_id>', methods=['GET'])
