@@ -126,7 +126,7 @@ def login_required(f):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_pyfile('config.py')
+    app.config.from_pyfile('test_config.py')
     app.database = create_engine(app.config.get('DB_URL'), encoding='utf-8', max_overflow=0)
 
     @app.route('/sign-up', methods=['POST'])
