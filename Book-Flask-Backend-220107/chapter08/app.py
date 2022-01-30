@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from functools import wraps
 import bcrypt
+from flask import Flask, request, jsonify, current_app, Response, g
 import jwt
-from flask import Flask, request, Response, jsonify, current_app, g
 from sqlalchemy import create_engine, text
 
 
@@ -97,11 +97,12 @@ def get_user_credential(email):
                 SELECT id, hashed_password
                 FROM users
                 WHERE email = :email        
-    """), {'email': email}).fetchone()
+            """), {'email': email}).fetchone()
 
     return {
         'id': row['id'],
         'hashed_password': row['hashed_password']
+
     } if row else None
 
 
@@ -150,10 +151,10 @@ def create_app():
         email = payload.get('email')
         password = payload.get('password')
 
-        credential = get_user_credential(email)
-        if credential and bcrypt.checkpw(password.encode('UTF-8'), credential['hashed_password'].encode('UTF-8')):
+        credentail = get_user_credential(email)
+        if credentail and bcrypt.checkpw(password.encode('UTF-8'), credentail['hashed_password'].encode('UTF-8')):
             payload = {
-                'user_id': credential['id'],
+                'user_id': credentail['id'],
                 'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
             }
             return jsonify({
@@ -208,8 +209,9 @@ def create_app():
         current_follow = get_follow(unfollow)
         return jsonify(current_follow)
 
-    @app.route('/timeline/<int:user_id>', methods=['GET'])
-    def timeline(user_id):
+    @app.route('/timeline', methods=['GET'])
+    @login_required
+    def timeline():
         # select user_id, tweet
         # from tweets
         # where user_id = 1
@@ -221,8 +223,8 @@ def create_app():
         # where t.user_id = 1 or ufl.user_id = 1;
 
         return jsonify({
-            'user_id': user_id,
-            'timeline': get_timeline(user_id)
+            'user_id': g.user_id,
+            'timeline': get_timeline(g.user_id)
         })
 
     return app
