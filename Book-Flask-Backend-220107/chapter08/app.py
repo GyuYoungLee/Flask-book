@@ -130,9 +130,13 @@ def create_app(config=None):
     if config:
         app.config.update(config)
     else:
-        app.config.from_pyfile('test_config.py')
+        app.config.from_pyfile('./config.py')
 
     app.database = create_engine(app.config.get('DB_URL'), encoding='utf-8', max_overflow=0)
+
+    @app.route('/ping', methods=['GET'])
+    def health_check():
+        return 'pong'
 
     @app.route('/sign-up', methods=['POST'])
     def sign_up():
