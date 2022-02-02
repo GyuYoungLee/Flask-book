@@ -1,5 +1,5 @@
 # http -v POST 127.0.0.1:5000/sign-up name=gy
-# http -v POST 127.0.0.1:5000/sign-up name=jang
+# http -v POST 127.0.0.1:5000/sign-up name=jd
 # http -v POST 127.0.0.1:5000/tweet id:=1 tweet=hi
 # http -v POST 127.0.0.1:5000/tweet id:=2 tweet=bye
 # http -v POST 127.0.0.1:5000/follow id:=1 follow:=2
