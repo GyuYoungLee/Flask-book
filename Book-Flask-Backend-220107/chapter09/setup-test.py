@@ -1,5 +1,4 @@
 import sys
-
 from flask import Flask
 from flask_script import Manager
 from flask_twisted import Twisted
@@ -25,5 +24,5 @@ if __name__ == '__main__':
 
 # FLASK_APP=setup-test.py flask run -h "0.0.0.0" -p 5000
 # python setup-test.py
-# python setup-test.py runserver -h "0.0.0.0" -p 5000 (flask_script)
+# python setup-test.py runserver -h "0.0.0.0" -p 5000 (flask_script, Flask==1.1.4, Werkzeug==1.0.1)
 
